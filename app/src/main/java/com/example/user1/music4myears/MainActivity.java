@@ -1,11 +1,15 @@
 package com.example.user1.music4myears;
 
+import android.app.Notification;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.content.Intent;
+import android.app.Service;
+
 public class MainActivity extends AppCompatActivity {
     MediaPlayer song1;
     MediaPlayer song2;
@@ -17,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     Button pause;
     int songid;
     TextView playing;
+    Intent intent;
+    Notification notification;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +35,13 @@ public class MainActivity extends AppCompatActivity {
         play = (Button) findViewById(R.id.play);
         pause = (Button) findViewById(R.id.pause);
         playing = (TextView) findViewById(R.id.playing);
+        intent = new Intent(this, UseService.class);
 
 
         song1 = MediaPlayer.create(this, R.raw.media1);
         song2 = MediaPlayer.create(this, R.raw.media2);
         song3 = MediaPlayer.create(this, R.raw.media3);
+        intent.putExtra("songid", "the id of the song playing");
 
         music1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
                     song2.start();
                 else
                     song3.start();
+                startService(intent);
+
             }
         });
 
@@ -72,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
                     song1.pause();
                     song2.pause();
                     song3.start();
+                stopService(intent);
             }
         });
 
